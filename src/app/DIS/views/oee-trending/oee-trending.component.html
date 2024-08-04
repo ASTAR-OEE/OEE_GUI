@@ -1,0 +1,57 @@
+<div class="row">
+    <!-- my first row-->
+    <div class="row" style="margin-top:10px;margin-bottom:1px">
+        <!-- Work Center select box-->
+        <div class="col-3" style="margin-left:50px">
+            <h5 style="display:inline-block">Choose machine:</h5>
+            <select style="width:150px;" 
+                ng-options="option.D_Name for option in selectBoxData.availableOptions track by option.D_Id"
+                ng-model="selectBoxData.selectedOption"
+                ng-selected=""></select>
+        </div>
+
+        <!-- Select time range buttons -->
+        <div class="col-6">
+            <div class="btn-group btn-group-justified">				
+                <div class="btn-group">
+                    <button type="button" id="Weekly" class="btn btn-success btn-trans" value="Weekly"(click)="getVal($event)"><b>Weekly</b></button>
+                </div>
+                <div class="btn-group">
+                    <button type="button" id="Monthly" class="btn btn-success btn-trans" value="Monthly" (click)="getVal($event)"><b>Monthly</b></button>
+                </div>
+                <div class="btn-group">
+                    <button type="button" id="3-Monthly" class="btn btn-success btn-trans" value="3-Monthly" (click)="getVal($event)"><b>3 Months</b></button>
+                </div>
+                <div class="btn-group">
+                    <button type="button" id="6-Monthly" class="btn btn-success btn-trans" value="6-Monthly" (click)="getVal($event)"><b>6 Months</b></button>
+                </div>
+                <div class="btn-group">
+                    <button type="button" id="12-Monthly" class="btn btn-success btn-trans" value="12-Monthly" (click)="getVal($event)"><b>12 Months</b></button>
+                </div>
+                <!--<div class="btn-group">
+                    <button type="button" class="btn btn-success btn-trans" value="Bi-Monthly"><b>Bi-Monthly</b></button>
+                </div>-->
+            </div>
+    </div>
+    <!-- end of my first row -->
+
+    <!-- second row....added later for choose machines button--->
+    <!-- <div class="row" style="margin-left: 50px;margin-top:1px;margin-bottom:2px">
+        <div class="col-4">
+            <button id="chooseMachineLink" class="btn btn-success btn-3d" style="width:160px;height:25px; margin:2px;padding:2px" data-toggle="modal" data-target="#machinesModal">
+                {{ btnLabel }}
+            </button>
+        </div>
+    </div> -->
+    <!-- end of second row added later---->
+
+
+
+
+<script>
+    $(document).ready(function () {
+        $("#machinesModal").draggable({
+            handle: ".modal-header, .modal-body, .modal-footer"
+        });
+    });
+</script>

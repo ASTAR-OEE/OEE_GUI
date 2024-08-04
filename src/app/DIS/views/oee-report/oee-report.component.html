@@ -1,0 +1,273 @@
+<!-- report-page.component.html -->
+<head>
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+</head>
+<section class="invoice">
+    <!-- title row -->
+    <div class="row">
+        <div class="col-xs-12">
+            <h2 class="page-header">
+                <i>
+                    <img src="../../../../assets/img/mct_logo.png" style='height:40px;'>
+                </i>
+                <b>SIMTech</b> OEE Monitoring System
+                <small class="pull-right">Date: <span>{{ currentDate }}</span></small>
+            </h2>
+        </div>
+    </div>
+    <!-- info row -->
+    <div class="row invoice-info">
+        <!-- <div class="col-sm-4 invoice-col">
+            <strong>Machine Name:&emsp;</strong>{{MachineName}}<br>
+            <strong>From:&emsp;&emsp;&emsp;&emsp;&emsp;</strong>{{From}}<br>
+            <strong>To:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;</strong>{{To}}<br>
+        </div> -->
+        <div class="col-sm-4 invoice-col">
+            <strong>Total Production Time(Hours):&nbsp;&nbsp;</strong>{{SPT}}<br>
+            <strong>Net Available Time(Hours):&ensp;&ensp;</strong>{{NAT}}<br>
+            <strong>Planned Down Time(Hours):&ensp;</strong>{{PDT}}<br>
+        </div>
+        <div class="col-sm-4 invoice-col">
+            <strong>Total Quantity Produced: &nbsp;</strong>{{Qty}}<br>
+            <strong>Scrap Quantity:&emsp;&emsp;&emsp;&emsp;&ensp;</strong>{{SQty}}<br>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-xs-12">
+            <h2 class="page-header" style="font-size:100% ">
+                <b>OEE</b>
+            </h2>
+        </div>
+    </div>
+    <div class="row" style="height:200px">
+        <div class="col-xs-6">
+            <div id="OEEbar" style="position:absolute;left:50%"></div>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-xs-12">
+            <h2 class="page-header" style="font-size:100% ">
+                <b>Availability Loss</b>
+            </h2>
+        </div>
+    </div>
+    <div class="row" style="height:200px">
+        <div class="col-xs-6 table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Reason</th>
+                        <th>Total Time(Mins)</th>
+                        <th>Percentage(%)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let row of AVAData">
+                        <td>{{row.reason}}</td>
+                        <td>{{row.duration_minutes}}</td>
+                        <td>{{row.percentage.toFixed(2)}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="table-responsive">
+                <table class="table">
+                    <tr>
+                        <th style="width:30%">Unplanned Down Time:</th>
+                        <td>{{totalA}} <b>Hours</b></td>
+                    </tr>
+                     <tr>
+                        <th style="width:30%">Setup Efficiency:</th>
+                        <td>{{SetupSpeed.toFixed(2)}} <b>%</b></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="col-xs-6">
+            <div id="AVAPie"></div>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-xs-12">
+            <h2 class="page-header" style="font-size:100% ">
+                <b>Performance Loss</b>
+            </h2>
+        </div>
+    </div>
+    <div class="row" style="height:200px">
+        <div class="col-xs-6 table-responsive">
+            <div class="table-responsive">
+                <table class="table">
+                    <tr>
+                        <th style="width:40%">Ideal Operating Time:</th>
+                        <td>{{totalIOT.toFixed(2)}} <b>Hours</b></td>
+                    </tr>
+                    <tr>
+                        <th style="width:40%">Speed Loss:</th>
+                        <td>{{speedLoss.toFixed(2)}} <b>Hours</b></td>
+                    </tr>
+                    <tr>
+                        <th style="width:40%">Efficiency Loss:</th>
+                        <td>{{EfficiencyLoss.toFixed(2)}} <b>%</b></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <div id="PERBar"></div>
+        </div>
+    </div>
+     <!-- <div class="row">
+        <div class="col-xs-12">
+            <h2 class="page-header" style="font-size:100% ">
+                <b>Quality Loss</b>
+            </h2>
+        </div>
+    </div>
+    <div class="row" style="height:200px">
+        <div class="col-xs-6 table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Reason</th>
+                        <th>Total Defect Quantity</th>
+                        <th>Percentage(%)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let row of QTYData">
+                        <td>{{row.reason}}</td>
+                        <td>{{row.Qty}}</td>
+                        <td>{{row.percentage}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-xs-6">
+            <div id="QTYPie"></div>
+        </div>
+    </div> -->
+    <div class="row"  *ngIf="filteredJobData.length">
+        <div class="col-xs-12 table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Job</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th>Quantity Produced</th>
+                        <th>Scrap Quantity</th>
+                        <th>Lost Operating Time(Mins)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let row of jobData | filter: {LOT: '!null'} | filter: {LOT: '!0'}">
+                        <td>{{row.Job}}</td>
+                        <td>{{row.start}}</td>
+                        <td>{{row.end}}</td>
+                        <td>{{row.Quantity}}</td>
+                        <td>{{row.ScrapQuantity}}</td>
+                        <td>{{row.LOT}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <h2 class="page-header" style="font-size:100% ">
+                <b>Job Summary</b>
+            </h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Job</th>
+                        <th>Employee Id</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th>Quantity Produced</th>
+                        <th>Scrap Quantity</th>                             
+                        <th>Actual Machine Time(Mins)</th>
+                        <th>Ideal Machine Time total(Mins)</th>
+                        <th>Ideal Machine Time(Mins/pic)</th>
+                        <th>Speed Loss(Mins)</th>
+                        <th>Actual Setup Time(Mins)</th>
+                        <th>Ideal Setup Time(Mins/pic)</th>
+                        <th>Setup Loss(Mins)</th>                           
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let row of jobData">
+                        <td>{{row.Job}}</td>
+                        <td>{{row.UserId}}</td>
+                        <td>{{row.start}}</td>
+                        <td>{{row.end}}</td>
+                        <td>{{row.Quantity}}</td>
+                        <td>{{row.ScrapQuantity}}</td>                             
+                        <td>{{row.ActualMT}}</td>
+                        <td>{{row.IdealMT}}</td>
+                        <td>{{row.IdealMTpp}}</td>
+                        <td>{{row.SpeedLoss}}</td>
+                        <td>{{row.ActualST}}</td>
+                        <td>{{row.IdealSTpp}}</td>
+                        <td>{{row.SetupLoss}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- <div class="row">
+        <div class="col-xs-12">
+            <h2 class="page-header" style="font-size:100% ">
+                <b>Shift Summary</b>
+            </h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Shift</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th>Quantity Produced</th>
+                        <th>Scrap Quantity</th>                             
+                        <th>Actual Machine Time(Mins)</th>
+                        <th>Ideal Machine Time total(Mins)</th>
+                        <th>Ideal Machine Time(Mins/pic)</th>
+                        <th>Speed Loss(Mins)</th>
+                        <th>Actual Setup Time(Mins)</th>
+                        <th>Ideal Setup Time(Mins/pic)</th>
+                        <th>Setup Loss(Mins)</th>  
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let row of shiftData">
+                        <td>{{row.Shift}}</td>
+                        <td>{{row.start}}</td>
+                        <td>{{row.end}}</td>
+                        <td>{{row.Quantity}}</td>
+                        <td>{{row.ScrapQuantity}}</td>                             
+                        <td>{{row.ActualMT}}</td>
+                        <td>{{row.IdealMT}}</td>
+                        <td>{{row.IdealMTpp}}</td>
+                        <td>{{row.SpeedLoss}}</td>
+                        <td>{{row.ActualST}}</td>
+                        <td>{{row.IdealSTpp}}</td>
+                        <td>{{row.SetupLoss}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div> -->
+</section>
+

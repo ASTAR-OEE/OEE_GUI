@@ -1,0 +1,374 @@
+<head>
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+</head>
+<div id="outerDiv" ng-controller="DonutChartController" ng-init="show()">
+	<!-- Note: Custom styling for this page comes from oeeStyles.css -->
+	<div class="pageheader" [style.height.px]="screenH * 0.04">
+		<h4 style="margin-top: 0px;"><b>Machine OEE</b> {{currentDate | date:'yyyy-MM-dd HH:mm:ss'}}</h4>
+	</div>
+    <section id="main-content" class="animated fadeInUp">
+        <!-- first row on the page-->
+        <div ng-controller="MachineDashboardController" class="row" [style.height.px]="screenH * 0.09">
+            <div class="col-md-9" style="background-color:white; margin-left:  10px">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><h4>Department Name:&nbsp;&nbsp;<b>{{DepartmentName}}</b></h4><!-- {{DepartmentName}} -->
+                         <p><h4>Machine Name: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>{{MachineName}} </b></h4><!--{{MachineName}} -->
+                        <!-- <div class="gaugeError" ng-show="showMessage()">
+                            <h4 style="text-align:center"><b>{{infoMessage}}</b></h4>
+                        </div> -->
+                    </div>
+                    <div class="col-md-6">
+                        <p><h4>Job No:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>{{JobId}}</b></h4><!--{{jobID}}-->
+                        <!--<p><h4>{{partIDLabel}}:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>{{partID}}</b></h4></p>-->
+                        <!--<p><h4>{{operationIDLabel}} {{time}} :&nbsp;&nbsp;&nbsp;&nbsp;<b>{{operationID}}</b></h4></p>-->
+                    </div>	
+               </div>
+          </div>
+
+          <div class="col-md-3"><!-- colors for this panel come from oeeStyles.css-->
+                <div class="panel panel-custom-running widget-mini" [style.height.px]="screenH * 0.13" style="margin-top: 5px;"><!--{{statusStyle}}-->
+                    <div class="panel-body">
+                        <i class="fa fa-cogs"></i>
+                    <!--<h1 class="text-center" style="color: white">{{MachineName}}</h1>
+                    <h3 class="text-center" style="color: white">{{status}}</h3>-->
+
+                        <span class="total text-center">{{MachineName}}</span><!--{{MachineName}}-->
+                        <span class="title text-center">{{status}}</span><!--{{status}}-->
+                    </div>
+                </div>
+            
+            </div>
+        </div>
+        <div class="row" >
+            <div class="row"[style.height.px]="screenH * 0.375">
+                <div class="col-md-9">
+                    <!-- <div style="display:inline-block; margin-left:  15px" >
+                        <input type="text" class="form-control" placeholder="{{start}}" id="datepickerStart" 
+                        style="width:170px" autocomplete="off">
+                        <input type="text" id="datepickerStart" style="width:130px">
+                    </div> -->
+                    <div style="display:inline-block; margin-left:  10px">  
+                        <input type="text" 
+                               style="width:150px;display: inline-block;" 
+                               class="form-control custom-date-picker"
+                               bsDatepicker 
+                               [(ngModel)]="startdate"
+                               [maxDate]="maxDate"
+                               (ngModelChange)="onStartDateSelect()">
+                    </div>
+                    <div style="display:inline-block; margin-left:  10px">
+                        <input type="text" 
+                               style="width:150px;display: inline-block;" 
+                               class="form-control custom-date-picker"
+                               bsDatepicker 
+                               [(ngModel)]="enddate"
+                               [maxDate]="maxDate"
+                               (ngModelChange)="onEndDateSelect()">
+                    </div>
+                    <!-- <div style="display:inline-block; margin-left:  10px">
+                        <input type="text" class="form-control" placeholder="{{end}}" id="datepickerEnd" 
+                        style="width:170px" autocomplete="off"> -->
+                        <!--<input type="text" id="datepickerEnd" style="width:130px">-->
+                    <!-- </div> -->
+                    <div style="display:inline-block">
+                        <!--<button type="button" class="btn btn-success btn-3d" id="getChartButton" ng-click="dateChosen()" style="width:120px;height:25px; margin-left:10px;padding:2px">Get Chart</button>-->
+                        <button type="button" class="btn btn-success btn-3d" id="getChartButton" (click)="show()" style="width:110px;height:25px; margin-left:10px;padding:2px">Get Chart</button>
+                        <!--<button type="button" class="btn btn-default" ng-click="goToNextScreen()"><i class="fa fa-print"></i> Print</button>-->
+                        <button (click)="navigateToOeeReportwithID()"  class="btn btn-default btn-3d" style="width:120px;height:25px; margin-left:10px;padding:2px"><i class="fa fa-print"></i>OEE Report</button>
+    
+                        <button (click)="redirectToAvailabilityReport()" class="btn btn-default btn-3d" style="width:155px;height:25px; margin-left:10px;padding:2px"><i class="fa fa-print"></i>Availability Report</button>
+                        <!-- <button class="btn btn-success btn-3d" style="width:60px;height:25px; margin-left:10px;padding:2px" data-toggle="modal" data-target="#whatIfModal">What If</button> -->
+    
+                        <!--<button id="getChartButton" type="button" ng-click="dateChosen()" style="width:150px; margin-left:10px">Update Chart</button>-->
+                    </div>
+
+                    <!----  adding check boxes -->
+                    <!-- <div class="row" style="margin-left:30px;margin-top: 10px;">
+                        <label class="checkbox-inline" style="display:inline-block;width:180px">
+                            <input type="checkbox" ng-model="formdata.english" ng-true-value="true" ng-false-value="false" ng-change="english()" style="display:inline-block"> OEE Report in English
+                        </label>
+                        <label class="checkbox-inline" style="display:inline-block;width:200px">
+                            <input type="checkbox" ng-model="formdata.english" ng-true-value="false" ng-false-value="true" ng-change="chinese()" style="display:inline-block"> 中文OEE报告
+                        </label>
+                    </div> -->
+                    <!----  end adding -->
+                
+                     <!----  adding -->
+                    <!--     <div class="row" style="margin-left:30px">
+                        <label class="checkbox-inline">
+                            <input type="checkbox" ng-model="formdata.weekDay" ng-true-value="true" ng-false-value="false" ng-change="weekDay()" style="display:inline-block"> Weekday OEE
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" ng-model="formdata.weekDay" ng-true-value="false" ng-false-value="true" ng-change="weekEnd()" style="display:inline-block"> Include Weekends also
+                        </label>
+                    </div> -->
+                    <!-- <div ng-show="showErrorMessage()" class="alert alert-info alert-dismissible"><h3>{{errorMsg}}</h3></div> -->
+                    <div class="row">
+                        <!-- 4 donut charts-->
+                        <div class="col-md-4">
+                            <!-- one donut chart-->
+                            <div ng-show="showDonutCharts()" id="donutChartOEE" [ngStyle]="{'height.px': screenH * 0.3, 'padding.px': 5}" (click)="oeeDonutClick()"></div>
+                                                  <!--  <div class="newStyleOEE" style="font-size:1.1em;color:blue">{{newOEE}}</div>-->
+                            <div class="sparklineChart" sparkline spark-data="oeeData" spark-options="DonutChartCtrl.longLineOptionsOEE" style=""></div>
+                        </div>
+                        <div class="col-md-8">
+                            <!-- three donut charts-->
+                            <div class="row">
+                            
+                            
+                                <div class="col-md-4">
+                                    <div ng-show="showDonutCharts()" id="donutChartAVA" [ngStyle]="{'height.px': screenH * 0.3, 'padding.px': 0}" ng-click="avaDonutClick()"></div>
+                                                       <!--   <div class="newStyle" style="font-size:0.9em;color:blue">{{newA}}</div> -->
+    
+                                    <div class="sparklineChart" sparkline spark-data="avaData" spark-options="DonutChartCtrl.longLineOptionsava" style=""></div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div ng-show="showDonutCharts()" id="donutChartPER" [ngStyle]="{'height.px': screenH * 0.3, 'padding.px': 0}" (click)="perDonutClick()"></div>
+                                                  <!--  <div class="newStyle" style="font-size:0.9em;color:blue">{{newP}}</div> -->
+    
+                                    <div class="sparklineChart" sparkline spark-data="perData" spark-options="DonutChartCtrl.longLineOptionsper" style=""></div>
+    
+                                </div>
+                                <div class="col-md-4">
+                                    <div ng-show="showDonutCharts()" id="donutChartQUA" [ngStyle]="{'height.px': screenH * 0.3, 'padding.px': 0}"></div>
+                                                  <!--   <div class="newStyle" style="font-size:0.9em;color:blue">{{newQ}}</div> -->
+    
+                                    <div class="sparklineChart" sparkline spark-data="quaData" spark-options="DonutChartCtrl.longLineOptionsqty" style=""></div>
+    
+                                </div>
+                            </div>
+                            <div id="quantityBar" class="row" ng-show="showQuantity()">
+                                <!--  for progress bar-->
+    
+                                <span class="text-left">Total outputs</span>
+                                <div class="progress progress-xs" style="height:20px">
+                                    <div class="progress-bar progress-bar-danger" role="progressbar" [style.width.%]="ScrapWidth">
+                                        {{ScrapQuantity}}
+                                    </div>
+                                    <div class="progress-bar progress-bar-success" role="progressbar" [style.width.%]="TotalWidth">
+                                        {{totalQuantity}}
+                                    </div>
+                                </div>
+    
+                            </div> <!-- end of row for progress bar-->
+                        </div>
+    
+                    </div>  <!-- end of row (4 donut charts)---->
+    
+                </div><!--- end of col-md-9-->
+                <div class="col-md-3" style="margin-top: 35px;margin-left: 35px;">
+                    <!-- for gauge charts-->
+                    <!--<div class="panel panel-default">
+                        
+                        <div class="panel-body widget-gauge" style="height: {{screenH*.37}}px">
+                            <div><h5 style="color:#1E90FF">{{message}}</h5></div> 
+                            <div class="goal-wrapper">
+                                <canvas height="80" id="gauge1" gauge gauge-type="gaugeType" options="gaugeOptions" value="value" max-value="maxValue" animation-time="animationTime"></canvas>
+                                <div class="goal-wrapper">
+                                    <span id="gauge-text" class="gauge-value pull-left">Machine Efficiency<br><b>{{reading}}%</b></span>
+                                    <span id="goal-text" class="goal-value pull-right">Target <br><b>{{maxValue}}%</b></span>
+                                </div>
+                            </div>
+                            <div class="goal-wrapper">
+                                <canvas height="80" id="gauge2" gauge gauge-type="gaugeType" options="gaugeOptions" value="setupvalue" max-value="maxValue" animation-time="animationTime"></canvas>
+                                <div class="goal-wrapper">
+                                    <span id="gauge-text" class="gauge-value pull-left">Setup Efficiency<br><b>{{setupreading}}%</b></span>
+                                    <span id="goal-text" class="goal-value pull-right">Target <br><b>{{maxValue}}%</b></span>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>-->
+                    <!--- progress bars-->
+                    <div [style.height.px]="screenH * 0.25">
+                        <h4 style="text-align:left"><b>Summary: </b></h4><br>
+                    <div>
+                        <span class="text-left" style="font-size:1em;"><b>TotalHours: {{totalHours}}</b></span>
+                        <!-- {{totalHours}} -->
+                    </div>
+                    <br />
+                        <!--<div>
+                            <span class="text-left" style="font-size:1em;"><b>Planned Downtime</b> {{noscheduleMsg}}</span>
+                            <div class="progress progress-xs" style="float:right">
+                                <div class="progress-bar-custom bg-color-noschedule" role="progressbar" style="width:{{noschedule}}%"></div>
+                            </div>
+                        </div>-->
+                        <div>
+                            <div class="text-left" style="font-size:1em;display:inline-block"><b>Plane Down Time</b> </div>
+                            <div style="display:inline-block;float:right;margin-right:15px;margin-top: 5px">
+                                {{noscheduleMsg}}
+                            </div>
+                            <div class="progress progress-xs">
+                                <div class="progress-bar-custom bg-color-noschedule" role="progressbar" [style.width.%]="noschedule"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="text-left" style="font-size:1em;display:inline-block"><b>Running</b> </div>
+                            <div style="display:inline-block;float:right;margin-right:15px;margin-top: 5px">
+                                {{runningMsg}}
+                            </div>
+                            <div class="progress progress-xs">
+                                <div class="progress-bar-custom bg-color-running" role="progressbar" [style.width.%]="running"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <span class="text-left" style="font-size:1em;display:inline-block"><b>Stoppage</b></span>
+                            <div style="display:inline-block;float:right;margin-right:15px;margin-top: 5px">
+                                {{stoppageMsg}}
+                            </div>
+                            <div class="progress progress-xs">
+                                <div class="progress-bar-custom bg-color-stoppage" role="progressbar" [style.width.%]="stoppage"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <span class="text-left" style="font-size:1em;display:inline-block"><b>Setup</b> </span>
+                            <div style="display:inline-block;float:right;margin-right:15px;margin-top: 5px">
+                                {{setupMsg}} 
+                            </div>
+                            <div class="progress progress-xs">
+                                <div class="progress-bar-custom bg-color-setup" role="progressbar" [style.width.%]="setup"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <span class="text-left" style="font-size:1em;display:inline-block"><b>Breakdown</b> </span>
+                            <div style="display:inline-block;float:right;margin-right:15px;margin-top: 5px">
+                                {{breakdownMsg}} 
+                            </div>
+                            <div class="progress progress-xs">
+                                <div class="progress-bar-custom bg-color-breakdown" role="progressbar" [style.width.%]="breakdown"></div>
+                            </div>
+                        </div>
+    
+                     
+                    </div> <!-- end of progress bars-->
+                </div> <!-- end of col-md-3-->
+            </div>
+
+            <div class="row" [ngStyle]="{'height.px': screenH * 0.375}">
+                <!-- gantt-->
+                <div class="col-md-12">
+                    <div [ngStyle]="{'height.px': 2, 'margin-left.px': screenW * 0.3, 'display': 'inline-block'}">
+                        <div id="noDataMsgBox" [ngClass]="{'show': isMsgShow}" [ngStyle]="{'display': isMsgShow ? 'block' : 'none'}" class="alert alert-info alert-dismissible">
+                            <h1><i class="icon fa fa-ban"> No Data Available during this Period. </i></h1>
+                        </div>
+                    </div>
+                    <!--- tool tip-->
+                    <div class="gantt-tooltip-style" [ngStyle]="{'height.px': screenH * 0.025, 'margin-left.px': screenW * 0.3, 'margin-bottom.px': 2, 'margin-top.px': 2, 'width.px': screenW * 0.4}">
+                        <h4 id="ganttTooltip" [ngStyle]="{'color': 'darkblue', 'font-size': '1em'}"></h4>
+                    </div>
+                    
+                    <!-- message to show when there is no data-->
+                    <!--<div id="chartDetail_NoData" class="col-md-10" style="margin-top:5px"></div>-->
+                    <!-- chart-->
+                    <div id="gantt" style="top: 2px"></div>
+                    <div style="display: inline-block">
+                        <div id="noDataMsgBoxJob" class="alert alert-info alert-dismissible">
+                            <!--<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>-->
+                            <h4><i class="icon fa fa-ban"> There is no Job data for the selected period.</i></h4>
+                        </div>
+                    </div>
+                    <!-- <div class="gantt-tooltip-style" [ngStyle]="{'height.px': screenH * 0.025, 'margin-left.px': screenW * 0.3, 'margin-bottom.px': 2, 'margin-top.px': 2, 'width.px': screenW * 0.4}">
+                        <h4 id="ganttTooltipJob" [ngStyle]="{'color': 'darkblue', 'font-size': '1em'}"></h4>
+                    </div> -->
+                    <div id="gantt2" style="top: 2px"></div>     
+                    <!--<div id="chartDetail" class="alert alert-success alert-dismissible" style="padding:2px;margin-top:4px">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        <h4><i class="icon fa fa-check">    Info:  {{detail}} </i></h4>
+                    </div>-->     
+                    </div>
+            </div><!-- end of third row...NL-->
+            
+            
+        </div>
+    </section>
+    <!-- OEE Modal -->
+    <div id="OEEModal" class="modal fade" role="dialog" [ngClass]="{'show': isOEEModalOpen}" [ngStyle]="{'display': isOEEModalOpen ? 'block' : 'none'}">
+        <!--<div class="modal-dialog" style="width:{{screenW*0.5}}px;height:{{screenH*0.9}}px">-->
+            <div class="modal-dialog" [ngStyle]="{'height.px': screenH * 0.5, 'width.px': '600px','margin-top':'130px'}" >
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        
+                        <div class="row" [ngStyle]="{'width.px': screenW * 0.5}">
+                            <div class="col-md-1" [ngStyle]="{'width.px': screenW * 0.07,'padding-right.px': 0}" ><h3 >OEE</h3></div>
+                            <div class="col-md-2" [ngStyle]="{'width.px': screenW * 0.06,'padding-left.px': 5,'padding-right.px': 0}"><h3 [ngStyle]="{'width.px': screenW * 0.03}">{{MachineName}}</h3></div>
+                            <div class="col-md-8" [ngStyle]="{'width.px': screenW * 0.15,'padding-left.px': 0}"><h3>{{currentDate | date:'yyyy-MM-dd HH:mm:ss'}}</h3></div>
+                        </div>
+                        <button type="button" class="close" (click)="closeOEEModal()">&times;</button>
+                        <!--<h3 class="modal-title">OEE</h3>-->
+                    </div>
+                    <div class="modal-body">
+                        <div class="row" style="height:200px">
+                            <div class="col-xs-6">
+                                <!--<div id="OEEbar" style="position:absolute;left:50%"></div>-->
+                                <div id="OEEbar" style="position:absolute;left:20%"></div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+                <!--<div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>-->
+            </div>
+    </div>
+
+    <!-- per Modal -->
+    <div id="PerformanceModal" class="modal fade" role="dialog" [ngClass]="{'show': isPerModalOpen}" [ngStyle]="{'display': isPerModalOpen ? 'block' : 'none'}">
+        <div class="modal-dialog" id = "PreModalDialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" (click)="closePerModal()">&times;</button>
+                    <!--<h3 class="modal-title">Performance</h3>-->
+                    <div class="row" [ngStyle]="{'width.px': screenW * 0.5}">
+                        <div class="col-md-3" [ngStyle]="{'width.px': '110','padding-right.px': 0}" ><h3>Performance</h3></div>
+                        <div class="col-md-2" [ngStyle]="{'width.px': '50','padding-right.px': 0}" ><h3>{{MachineName}}</h3></div>
+                        <div class="col-md-6"><h3>{{currentDate | date:'yyyy-MM-dd HH:mm:ss'}}</h3></div>
+
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-4 table-responsive" style="margin-right:40px">
+                            <table class="table">
+                                <tr>
+                                    <th style="font-size:0.9em">Total Ideal time:</th>
+                                    <td style="font-size:0.8em">{{totalIOT}} <b>Hours</b></td>
+                                </tr>
+                                <tr>
+                                    <th style="font-size:0.9em">Speed Loss:</th>
+                                    <td style="font-size:0.8em">{{speedLoss}} <b>Hours</b></td>
+                                </tr>
+                                <tr>
+                                    <th style="font-size:0.9em">Efficiency Loss:</th>
+                                    <td style="font-size:0.8em">{{EfficiencyLoss}} <b>%</b></td>
+                                </tr>
+                            </table>
+                          
+                        </div>
+                     
+                        <div class="col-sm-6" style="float:left">
+                            <div id="PERBar"></div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            <!--<div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>-->
+        </div>
+
+    </div>
+    <!--</div>-->
+    <!-- end of per modal-->
+
+    	  
+</div>

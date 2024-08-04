@@ -1,0 +1,116 @@
+<head>
+  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+</head>
+<div>
+    <div class="pageheader">
+      <div class="row" style="margin:5px">
+        <!-- <div class="col-4"><h2>{{ heading }}</h2></div> -->
+        <div class="col-8">
+          <div class="row col-12">
+            <div class="col-2 legend">
+              <img src="./assets/img/running.png" style="height:20px;width:20px" />
+              <h5 style="display:inline-block;padding:2px;font-size:1vw">{{ running }}</h5>
+            </div>
+            <div class="col-2 legend">
+              <img src="./assets/img/stoppage.png" style="height:20px;width:20px" />
+              <h5 style="display:inline-block;padding:2px;font-size:1vw">{{ stoppage }}</h5>
+            </div>
+            <div class="col-2 legend">
+              <img src="./assets/img/setup.png" style="height:20px;width:20px" />
+              <h5 style="display:inline-block;padding:2px;font-size:1vw">{{ setup }}</h5>
+            </div>
+            <div class="col-2 legend">
+              <img src="./assets/img/breakdown.png" style="height:20px;width:20px" />
+              <h5 style="display:inline-block;padding:2px;font-size:1vw">{{ breakdown }}</h5>
+            </div>
+            <div class="col-2 legend">
+              <img src="./assets/img/no schedule.png" style="height:20px;width:20px" />
+              <h5 style="display:inline-block;padding:2px;font-size:1vw">{{ noSchedule }}</h5>
+            </div>
+            <div class="col-2 legend">
+              <img src="./assets/img/disconnected.png" style="height:20px;width:20px" />
+              <h5 style="display:inline-block;padding:2px;font-size:1vw">{{ disconnected }}</h5>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mainPage">
+      <div id="machinePanel">
+        <div *ngFor="let machine of bigData">
+          <div class="statusImage" [ngStyle]="{'margin-left.%': machine.X_Location, 'margin-top.vh': machine.Y_Location}">
+            <div style="position:relative;top:-2px; right:10vw;width:12vw">
+              <div style="display:inline-block;">
+                <img [src]="'./assets/img/' + machine.Code.toLowerCase() + '.png'" 
+                     style="float:right;width:3vw;height:3vw;display:inline-block"
+                     [routerLink]="['/machine-dashboard', {MachineID: machine.MachineID, MachineName: machine.MachineName, status: machine.Code, DepartmentName: machine.Department_name, Duration: machine.duration, JobId: machine.JobId, PartId: machine.PartId, ProcessId: machine.ProcessId, Reason: machine.Reason, JobStatus: machine.JobStatus, time: machine.time}]"
+                />
+                <text style="color:blue;float:left;font-size:1vw;width:10vw;text-align:center;background:rgba(243, 241, 239,0.6);display:inline-block;">
+                  <strong>{{ machine.JobId }}</strong>
+                </text>
+                <text style="color:blue;float:left;font-size:1.5vw;width:10vw;text-align:center;background:rgba(243, 241, 239,0.6);display:inline-block;">
+                  <strong>{{ machine.MachineName.toUpperCase() }}</strong>
+                </text>
+              </div>
+              <div style="width:12vw;display:inline-block">
+                <!-- <span class="col-5" style="color:blue;float:left;font-size:1vw;text-align:center;background:rgba(243, 241, 239,0.6);display:inline-block">
+                  <strong>{{ machine.OEE }}</strong>
+                </span> -->
+                <!-- <span class="col-6" style="float:right;font-size:1vw;text-align:center;background:rgba(243, 241, 239,0.6);color:darkslategrey;display:inline-block">
+                  <strong>{{ (machine.duration).toFixed(0) }} Mins</strong>
+                </span> -->
+                <text style="float:left;font-size:1vw;width:10vw;text-align:center;background:rgba(243, 241, 239,0.6);color:darkslategrey;display:inline-block">
+                  <strong>{{ (machine.duration).toFixed(0) }} Mins</strong>
+                </text>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <style type="text/css">
+    .mainPage {
+      background-image: url('./assets/img/machines.png');
+      height: 77vh;
+      width: 95vw;
+      margin: 0px;
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
+    }
+    .row::after {
+      content: "";
+      clear: both;
+      display: block;
+    }
+    [class*="col-"] {
+      float: left;
+    }
+    .col-2 {
+      width: 16.2%;
+    }
+    .col-4 {
+      width: 33.33%;
+    }
+    .col-6 {
+      width: 50%;
+    }
+    .col-8 {
+      width: 76%;
+    }
+    .col-12 {
+      width: 100%;
+    }
+    .statusImage {
+      width: 65px;
+      height: 65px;
+      position: absolute;
+    }
+    @media only screen and (max-width: 768px) {
+      [class*="col-"] {
+        width: 100%;
+      }
+    }
+  </style>
+  

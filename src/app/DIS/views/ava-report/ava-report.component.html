@@ -1,0 +1,58 @@
+<section class="invoice">
+    <!-- title row -->
+    <div class="row">
+        <div class="col-xs-12">
+            <h2 class="page-header">
+                <i>
+                    <img src="../../../../assets/img/mct_logo.png" style='height:40px;'>
+                </i>
+                <b>SIMTech</b> OEE Monitoring System
+                <small class="pull-right">Date: <span>{{ currentDate }}</span></small>
+            </h2>
+        </div>
+    </div>
+    <!-- info row -->
+    <div class="row invoice-info">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="flex: 1;">
+              <strong>Machine Name:&emsp;</strong>{{MachineName}}
+            </div>
+            <div style="flex: 1; text-align: center;">
+              <strong>From:&emsp;&emsp;&emsp;&emsp;&emsp;</strong>{{From}}
+            </div>
+            <div style="flex: 1; text-align: right;">
+              <strong>To:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;</strong>{{To}}
+            </div>
+        </div>               
+    </div>
+<!-- <div class="row">
+    <div class="col-xs-12">
+        <h2 class="page-header" style="font-size:100% ">
+            <b>Availability Loss</b>
+        </h2>
+    </div>
+</div> -->
+<div class="row" style="height:200px">
+    <div class="col-xs-6 table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Reason</th>
+                    <th>Total Time(Mins)</th>
+                    <th>Percentage(%)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let row of AVAData">
+                    <td>{{row.reason}}</td>
+                    <td>{{row.duration_minutes}}</td>
+                    <td>{{row.percentage.toFixed(2)}}</td>
+                </tr>
+            </tbody>
+        </table>
+        
+    </div>
+
+    
+</div>
+</section>
