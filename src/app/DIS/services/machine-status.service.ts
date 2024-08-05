@@ -15,7 +15,7 @@ export class MachineStatusService {
   // private OEESumUrl = '/api/reportservice/kpi_summary';
   // private OEEReportUrl = '/api/reportservice/department_fixed_report';
   // private OEEReportWithIDUrl ='/api/reportservice/machine_report';
-  private apiUrl = 'http://localhost:8060/getOEE/getAllMachine';
+  private apiUrl = 'http://localhost:8070/getOEE/getAllMachine';
   private OEESumUrl = 'http://localhost:8007/kpi_summary';
   private OEEReportUrl = 'http://localhost:8007/department_fixed_report';
   private OEEReportWithIDUrl ='http://localhost:8007/machine_report';

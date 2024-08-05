@@ -80,8 +80,8 @@ export class MachineDashboardComponent implements OnInit {
 
   selectedDate: string;
   maxDate: Date = new Date();
-  startdate =  new Date('2020-05-20');
-  enddate = new Date('2020-06-20');
+  startdate =  new Date('2024-08-01');
+  enddate = new Date('2024-08-05');
 
   constructor(
     private route: ActivatedRoute,

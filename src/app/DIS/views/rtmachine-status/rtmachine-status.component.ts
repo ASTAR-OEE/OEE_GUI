@@ -27,8 +27,8 @@ export class RTMachineStatusComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.reLoadMachines();
-  //   this.refreshSubscription = interval(5000).subscribe(() => this.reLoadMachines());
-  //  this.initializeWebSocketConnection();
+    this.refreshSubscription = interval(5000).subscribe(() => this.reLoadMachines());
+   this.initializeWebSocketConnection();
   }
 
   ngOnDestroy(): void {
