@@ -22,7 +22,7 @@ export class DataSharingService {
   //  private dpUrl = 'https://e2b0f807-88c3-4e44-b94a-bd556a7140ab.mock.pstmn.io/api/dpUrl';
   //  private kpiUrl = '/api/kpiservice/kpi_data_by_machine';
   //  private dpUrl = '/api/dpservice/getOEE/getJobAndStatus';
-   private kpiUrl = 'http://localhost:8060/kpi_data_by_machine';
+   private kpiUrl = 'http://localhost:8060/kpiDataByMachine';
    private dpUrl = 'http://localhost:8070/getOEE/getJobAndStatus';
 
 

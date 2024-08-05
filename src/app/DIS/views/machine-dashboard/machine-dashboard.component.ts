@@ -180,10 +180,10 @@ export class MachineDashboardComponent implements OnInit {
         console.log(data);
 
         // Assuming data contains oee, ava, per, qua, and corresponding colors
-        this.OEE = data.kpi_result.OEE*100;
-        this.A = data.kpi_result.A*100;
-        this.P = data.kpi_result.P*100;
-        this.Q = data.kpi_result.Q*100;
+        this.OEE = data.kpi_results.OEE*100;
+        this.A = data.kpi_results.A*100;
+        this.P = data.kpi_results.P*100;
+        this.Q = data.kpi_results.Q*100;
         const oeecolor = 'rgb(226, 93, 93)';
         const avacolor = 'rgb(237, 206, 140)';
         const percolor = 'rgb(26, 188, 156)';
@@ -193,39 +193,39 @@ export class MachineDashboardComponent implements OnInit {
 
         const PERarray = [];
         //Performance modal
-        this.totalIOT = (data.kpi_result.IOT / 3600).toFixed(2)
-        this.speedLoss = (data.kpi_result.speedloss / 3600).toFixed(2);
-        this.EfficiencyLoss = (data.kpi_result.speedloss*100/data.kpi_result.OPE).toFixed(2);
-        var x =  data.kpi_result.OPE / 3600;
+        this.totalIOT = (data.kpi_results.IOT / 3600).toFixed(2)
+        this.speedLoss = (data.kpi_results.speedloss / 3600).toFixed(2);
+        this.EfficiencyLoss = (data.kpi_results.speedloss*100/data.kpi_results.OPE).toFixed(2);
+        var x =  data.kpi_results.OPE / 3600;
         PERarray.push(['Actual Machine Time', x.toFixed(2)]);
-        PERarray.push(['Ideal Machine Time',((data.kpi_result.IOT) / 3600).toFixed(2)]);
+        PERarray.push(['Ideal Machine Time',((data.kpi_results.IOT) / 3600).toFixed(2)]);
         this.reportbarPer('PERBar', PERarray);
 
-        var target = data.kpi_result.TotalQuantity + 8;
-        this.totalQuantity = data.kpi_result.TotalQuantity - data.kpi_result.ScrapQuantity;
-        this.TotalWidth = data.kpi_result.TotalQuantity * 70 / target;
-        this.ScrapQuantity = data.kpi_result.ScrapQuantity;
-        this.ScrapWidth = data.kpi_result.ScrapQuantity * 70 / target;
+        var target = data.kpi_results.TotalQuantity + 8;
+        this.totalQuantity = data.kpi_results.TotalQuantity - data.kpi_results.ScrapQuantity;
+        this.TotalWidth = data.kpi_results.TotalQuantity * 70 / target;
+        this.ScrapQuantity = data.kpi_results.ScrapQuantity;
+        this.ScrapWidth = data.kpi_results.ScrapQuantity * 70 / target;
 
           //---------------------Gauge--------------------------------
           //   $scope.drawGauge(item.Speed, item.SetupSpeed);
           //--------------------StatusBreakdown-----------------------  
-          this.breakdown = data.kpi_result.BREAKDOWNper;
-          this.breakdownMsg = (data.kpi_result.BREAKDOWN / 3600).toFixed(2) + " Hours     " + data.kpi_result.BREAKDOWNper.toFixed(2) + "%";  //divide by 60 * 60 ...gives Hours
+          this.breakdown = data.kpi_results.BREAKDOWNper;
+          this.breakdownMsg = (data.kpi_results.BREAKDOWN / 3600).toFixed(2) + " Hours     " + data.kpi_results.BREAKDOWNper.toFixed(2) + "%";  //divide by 60 * 60 ...gives Hours
           // $scope.breakdownMsg = Math.round(item.BREAKDOWN / 3600) + " Hours     " + item.BREAKDOWNper.toFixed(2) + "%";  //divide by 60 * 60 ...gives Hours
-          this.running = data.kpi_result.OPEper;
-          this.runningMsg = (data.kpi_result.OPE / 3600).toFixed(2) + " Hours    " + data.kpi_result.OPEper.toFixed(2) + "%";
+          this.running = data.kpi_results.OPEper;
+          this.runningMsg = (data.kpi_results.OPE / 3600).toFixed(2) + " Hours    " + data.kpi_results.OPEper.toFixed(2) + "%";
           //  $scope.runningMsg = Math.round(item.OPE / 3600) + " Hours    " + item.OPEper.toFixed(2) + "%";
-          this.setup = data.kpi_result.SETUPper;
-          this.setupMsg = (data.kpi_result.SETUP / 3600).toFixed(2) + " Hours    " + data.kpi_result.SETUPper.toFixed(2) + "%";
+          this.setup = data.kpi_results.SETUPper;
+          this.setupMsg = (data.kpi_results.SETUP / 3600).toFixed(2) + " Hours    " + data.kpi_results.SETUPper.toFixed(2) + "%";
           // $scope.setupMsg = Math.round(item.SETUP / 3600) + " Hours    " + item.SETUPper.toFixed(2) + "%";
-          this.stoppage = data.kpi_result.STOPPAGEper;
-          this.stoppageMsg = (data.kpi_result.STOPPAGE / 3600).toFixed(2) + " Hours    " + data.kpi_result.STOPPAGEper.toFixed(2) + "%";
+          this.stoppage = data.kpi_results.STOPPAGEper;
+          this.stoppageMsg = (data.kpi_results.STOPPAGE / 3600).toFixed(2) + " Hours    " + data.kpi_results.STOPPAGEper.toFixed(2) + "%";
           // $scope.stoppageMsg = Math.round(item.STOPPAGE / 3600) + " Hours    " + item.STOPPAGEper.toFixed(2) + "%";
-          this.noschedule = data.kpi_result.NOSCHEDULEper;
-          this.noscheduleMsg = (data.kpi_result.NOSCHEDULE / 3600).toFixed(2) + " Hours    " + data.kpi_result.NOSCHEDULEper.toFixed(2) + "%";
+          this.noschedule = data.kpi_results.NOSCHEDULEper;
+          this.noscheduleMsg = (data.kpi_results.NOSCHEDULE / 3600).toFixed(2) + " Hours    " + data.kpi_results.NOSCHEDULEper.toFixed(2) + "%";
           // $scope.noscheduleMsg = Math.round(item.NOSCHEDULE / 3600) + " Hours    " + item.NOSCHEDULEper.toFixed(2) + "%";
-          var totalHours = data.kpi_result.BREAKDOWN + data.kpi_result.OPE + data.kpi_result.SETUP + data.kpi_result.STOPPAGE + data.kpi_result.NOSCHEDULE;
+          var totalHours = data.kpi_results.BREAKDOWN + data.kpi_results.OPE + data.kpi_results.SETUP + data.kpi_results.STOPPAGE + data.kpi_results.NOSCHEDULE;
           // $scope.totalHours = Math.round(totalHours / 3600) + " Hours";
           this.totalHours = (totalHours / 3600).toFixed(2)  + " Hours";
 
