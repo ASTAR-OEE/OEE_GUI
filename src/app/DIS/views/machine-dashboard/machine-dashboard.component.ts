@@ -81,7 +81,7 @@ export class MachineDashboardComponent implements OnInit {
   selectedDate: string;
   maxDate: Date = new Date();
   startdate =  new Date('2024-08-01');
-  enddate = new Date('2024-08-05');
+  enddate = new Date('2024-08-07');
 
   constructor(
     private route: ActivatedRoute,
@@ -259,6 +259,7 @@ export class MachineDashboardComponent implements OnInit {
    
     this.dataSharingService.getTables(this.MachineID, this.startdate, this.enddate).subscribe(
       (data) => {
+        console.log(data)
         if (data.Table4.length > 0) {              
                   //$('#noDataMsgBox').hide();
                  // var tasksstring = '[' + data.Table[0].JSONdata.toString() + ']';

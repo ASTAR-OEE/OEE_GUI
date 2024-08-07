@@ -105,7 +105,17 @@ export class OEEReportWithIDComponent implements OnInit {
            //const QTYarray = this.buildArrayFromTable(data.Table7, 'reason', 'Qty');
  
            // Generate pie charts
-           this.reportPie('AVAPie', AVAarray);
+           const statusSums = new Map<string, number>();
+           AVAarray.forEach(([status, value]) => {
+            if (statusSums.has(status)) {
+              statusSums.set(status, statusSums.get(status)! + value);
+            } else {
+              statusSums.set(status, value);
+            }
+          });
+          const totalSum = Array.from(statusSums.values()).reduce((acc, sum) => acc + sum, 0);
+          const resultArray = Array.from(statusSums.entries()).map(([status, sum]) => [status, (sum / totalSum) * 100]);
+           this.reportPie('AVAPie', resultArray);
            //this.reportPie('QTYChart', QTYarray);
           
           // 填充基本变量
@@ -118,9 +128,38 @@ export class OEEReportWithIDComponent implements OnInit {
           this.From = kpiReport.startdt;
           this.To = kpiReport.enddt;
           // 处理和填充数据数组
-          this.AVAData = availabilityLossDetails;
+          type DataObject = {
+            machine_id: string;
+            loss_type: string;
+            reason: string;
+            reason_code_c: string;
+            chinese_code: string;
+            start_time: string;
+            end_time: string;
+            duration_minutes: number;
+            percentage: number;
+          };
+          const reasonMap = new Map<string, DataObject>();
+          availabilityLossDetails.forEach(item => {
+            if (reasonMap.has(item.reason)) {
+              const existingItem = reasonMap.get(item.reason)!;
+              existingItem.duration_minutes += item.duration_minutes;
+            } else {
+              // 克隆对象，保持其他属性不变，修改duration_minutes
+              const newItem = { ...item, duration_minutes: item.duration_minutes };
+              reasonMap.set(item.reason, newItem);
+            }
+          });
+          const totalDuration = Array.from(reasonMap.values()).reduce((acc, item) => acc + item.duration_minutes, 0);
+          const resultavailabilityLossDetails: DataObject[] = Array.from(reasonMap.values()).map(item => ({
+            ...item,
+            duration_minutes: parseFloat(item.duration_minutes.toFixed(2)),
+            percentage: totalDuration > 0 ? parseFloat(((item.duration_minutes / totalDuration) * 100).toFixed(2)) : 0
+          }));
+          this.AVAData = resultavailabilityLossDetails;
           this.QTYData = shiftDetails;
           this.jobData = jobDetails;
+          console.log(shiftDetails)
           this.shiftData = shiftDetails;
           console.log(this.AVAData);
           // 计算其他变量

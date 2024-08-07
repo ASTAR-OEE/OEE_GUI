@@ -53,7 +53,7 @@
             </h2>
         </div>
     </div>
-    <div class="row" style="height:200px">
+    <div class="row" style="height:600px">
         <div class="col-xs-6 table-responsive">
             <table class="table table-striped">
                 <thead>
@@ -208,17 +208,17 @@
                     <tr *ngFor="let row of jobData">
                         <td>{{row.Job}}</td>
                         <td>{{row.UserId}}</td>
-                        <td>{{row.start}}</td>
-                        <td>{{row.end}}</td>
+                        <td>{{row.startdt}}</td>
+                        <td>{{row.enddt}}</td>
                         <td>{{row.Quantity}}</td>
-                        <td>{{row.ScrapQuantity}}</td>                             
-                        <td>{{row.ActualMT}}</td>
-                        <td>{{row.IdealMT}}</td>
-                        <td>{{row.IdealMTpp}}</td>
-                        <td>{{row.SpeedLoss}}</td>
-                        <td>{{row.ActualST}}</td>
-                        <td>{{row.IdealSTpp}}</td>
-                        <td>{{row.SetupLoss}}</td>
+                        <td>{{row.Sqty}}</td>                             
+                        <td>{{row.OPE.toFixed(2)}}</td>
+                        <td>{{row.Ideal.toFixed(2)}}</td>
+                        <td>{{row.SCT.toFixed(2)}}</td>
+                        <td>{{row.speedloss.toFixed(2)}}</td>
+                        <td>{{row.SETUP.toFixed(2)}}</td>
+                        <td>{{row.SST.toFixed(2)}}</td>
+                        <td>{{row.setuploss.toFixed(2)}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -236,34 +236,24 @@
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>Shift</th>
-                        <th>Start Time</th>
-                        <th>End Time</th>
-                        <th>Quantity Produced</th>
-                        <th>Scrap Quantity</th>                             
+                        <th>Job ID</th>
+                        <th>shift Start</th>
+                        <th>shift End</th>
                         <th>Actual Machine Time(Mins)</th>
-                        <th>Ideal Machine Time total(Mins)</th>
-                        <th>Ideal Machine Time(Mins/pic)</th>
-                        <th>Speed Loss(Mins)</th>
-                        <th>Actual Setup Time(Mins)</th>
-                        <th>Ideal Setup Time(Mins/pic)</th>
-                        <th>Setup Loss(Mins)</th>  
+                        <th>Actual Setup Time(Mins)</th>                             
+                        <th>shift Outputs</th>
+                        <th>EmployeeID</th> 
                     </tr>
                 </thead>
                 <tbody>
                     <tr *ngFor="let row of shiftData">
-                        <td>{{row.Shift}}</td>
-                        <td>{{row.start}}</td>
-                        <td>{{row.end}}</td>
-                        <td>{{row.Quantity}}</td>
-                        <td>{{row.ScrapQuantity}}</td>                             
-                        <td>{{row.ActualMT}}</td>
-                        <td>{{row.IdealMT}}</td>
-                        <td>{{row.IdealMTpp}}</td>
-                        <td>{{row.SpeedLoss}}</td>
-                        <td>{{row.ActualST}}</td>
-                        <td>{{row.IdealSTpp}}</td>
-                        <td>{{row.SetupLoss}}</td>
+                        <td>{{row.job_id}}</td>
+                        <td>{{row.shift_start_time}}</td>
+                        <td>{{row.shift_end_time}}</td>
+                        <td>{{row.shift_running_time}}</td>
+                        <td>{{row.shift_setup_time}}</td>                             
+                        <td>{{row.shift_job_qty}}</td>
+                        <td>{{row.shift_emp}}</td>
                     </tr>
                 </tbody>
             </table>

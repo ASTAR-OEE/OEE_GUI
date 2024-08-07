@@ -82,7 +82,27 @@ export class OeeSummaryComponent implements OnInit {
   someStuff(timerange: string,startdate:string) {
     this.machineStatusService.getAPQPercentage_Time(timerange,startdate).subscribe(
       data => {
-        this.chartData = data.kpi_results;
+        console.log(data)
+        const kpiList = data.kpi_reports;
+        const KL = [];
+        const ans = [];
+        for (let i = 0; i < kpiList.length; i++) {
+          if (!KL.includes(kpiList[i].machine_name)) {
+            KL.push(kpiList[i].machine_name);
+            ans.push({
+              "machine_id": kpiList[i].machine_id,
+              "MachineName": kpiList[i].machine_name,
+              "A": kpiList[i].A,
+              "P": kpiList[i].P,
+              "Q": kpiList[i].Q,
+              "OEE": kpiList[i].OEE,
+              "startdt": kpiList[i].startdt,
+              "enddt": kpiList[i].enddt
+            });
+          }
+        }
+        // this.chartData = data.kpi_reports;
+        this.chartData = ans;
         console.log(this.chartData);
         this.generateCharts();
       },
@@ -108,6 +128,13 @@ export class OeeSummaryComponent implements OnInit {
       },
       data: {
         json: this.chartData,
+        // [ { "machine_id": "10.40.0.231", "MachineName": "M 1", "A": 0.8306666666666667, "P": 0.819, "Q": 0.906, "OEE": 0.6166666666666667, "startdt": "2024-06-01T07:15:55.717000", "enddt": "2024-07-05T08:04:24.870000" }, 
+        // {  "machine_id": "10.40.0.232", "MachineName": "M 2", "A": 0.8085, "P": 0.8245, "Q": 0.9135, "OEE": 0.609, "startdt": "2024-06-01T07:15:55.717000", "enddt": "2024-07-04T09:04:50.747000" }, 
+        // { "machine_id": "10.40.0.233", "MachineName": "M 3", "A": 0.8235, "P": 0.826, "Q": 0.898, "OEE": 0.6114999999999999, "startdt": "2024-06-01T07:15:55.717000", "enddt": "2024-07-04T09:04:50.747000" }, 
+        // { "machine_id": "10.40.0.234", "MachineName": "M 4", "A": 0.822, "P": 0.823, "Q": 0.903, "OEE": 0.611, "startdt": "2024-06-01T07:15:55.717000", "enddt": "2024-06-02T07:15:55.717000" }, 
+        // { "machine_id": "10.40.0.235", "MachineName": "M 5", "A": 0.815, "P": 0.819, "Q": 0.902, "OEE": 0.602, "startdt": "2024-06-01T07:15:55.717000", "enddt": "2024-06-02T07:15:55.717000" }, 
+        // { "machine_id": "10.40.0.236", "MachineName": "M 6", "A": 0.862, "P": 0.817, "Q": 0.919, "OEE": 0.647, "startdt": "2024-06-01T07:15:55.717000", "enddt": "2024-06-02T07:15:55.717000" }, 
+        // { "machine_id": "10.40.0.237", "MachineName": "M 7", "A": 0.754, "P": 0.828, "Q": 0.913, "OEE": 0.57, "startdt": "2024-06-01T07:15:55.717000", "enddt": "2024-06-02T07:15:55.717000" } ] ,
         keys: {
           x: 'MachineName',
           value: [value],
@@ -150,7 +177,25 @@ export class OeeSummaryComponent implements OnInit {
   }
 
   navigateToOeeReport() {
-    this.router.navigate(['/oee-report',this.selectedDate,this.timerange]); // 跳转到 OEE 报告页面
+    let time = this.timerange
+    if (time == 'Weekly') {
+      time = 'past_week'
+    } else if (time == 'Monthly') {
+      time = 'past_month'
+    } else if (time == '3-Monthly') {
+      time = 'last_3_months'
+    } else if (time == '6-Monthly') {
+      time = 'last_6_months'
+    } else if (time == '12-Monthly') {
+      time = 'last_12_months'
+    }
+    const date = new Date(this.selectedDate);
+    const year = date.getUTCFullYear();
+    const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // 月份从 0 开始
+    const day = String(date.getUTCDate()).padStart(2, '0');
+    const isoDateString = `${year}-${month}-${day}T00:00:00Z`;
+    console.log(isoDateString, time)
+    this.router.navigate(['/oee-report',isoDateString,time]); // 跳转到 OEE 报告页面
    
   }
 }

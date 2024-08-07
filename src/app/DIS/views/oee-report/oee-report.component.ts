@@ -54,17 +54,16 @@ export class OEEReportComponent implements OnInit {
   loadData() {
     // 假设 timerange 和 selectedDate 是你需要的参数
     this.route.params.subscribe(params => {
-      this.selectedDate = params['selectedDate']; // 使用+将字符串转换为数字
+      this.selectedDate = params['selectDate']; // 使用+将字符串转换为数字
       this.timerange = params['timeRange'];
     });
     // const timerange = 'Weekly'; // 根据实际需要设定
     // const selectedDate = new Date().toISOString(); // 替换为实际选择的日期
-    
     this.machineStatusService.getReportData(this.timerange, this.selectedDate).subscribe(
       data => {
-          console.log(data.availability_loss_details);
+          console.log(data);
           // 从数据中提取值并赋值给组件变量
-          const kpiReport = data.kpi_report;
+          const kpiReport = data.combined_kpi;
           const availabilityLossDetails = data.availability_loss_details;
           const jobDetails = data.job_details;
           const shiftDetails = data.shift_details;
@@ -72,17 +71,17 @@ export class OEEReportComponent implements OnInit {
         
           let valueToPush = [];
           valueToPush[0] = 'Availability';
-          valueToPush[1] = (kpiReport.A * 100).toFixed(2);
+          valueToPush[1] = (kpiReport.A).toFixed(2);
           OEEarray.push(valueToPush);
   
           valueToPush = [];
           valueToPush[0] = 'Performance';
-          valueToPush[1] = (kpiReport.P * 100).toFixed(2);
+          valueToPush[1] = (kpiReport.P).toFixed(2);
           OEEarray.push(valueToPush);
   
           valueToPush = [];
           valueToPush[0] = 'Quality';
-          valueToPush[1] = (kpiReport.Q * 100).toFixed(2);
+          valueToPush[1] = (kpiReport.Q).toFixed(2);
           OEEarray.push(valueToPush);
   
           valueToPush = [];
@@ -100,14 +99,24 @@ export class OEEReportComponent implements OnInit {
            //const QTYarray = this.buildArrayFromTable(data.Table7, 'reason', 'Qty');
  
            // Generate pie charts
-           this.reportPie('AVAPie', AVAarray);
+           const statusSums = new Map<string, number>();
+           AVAarray.forEach(([status, value]) => {
+            if (statusSums.has(status)) {
+              statusSums.set(status, statusSums.get(status)! + value);
+            } else {
+              statusSums.set(status, value);
+            }
+          });
+          const totalSum = Array.from(statusSums.values()).reduce((acc, sum) => acc + sum, 0);
+          const resultArray = Array.from(statusSums.entries()).map(([status, sum]) => [status, (sum / totalSum) * 100]);
+           this.reportPie('AVAPie', resultArray);
            //this.reportPie('QTYChart', QTYarray);
-          console.log(AVAarray);
+          console.log(resultArray);
           // 填充基本变量
           
-          this.SPT = kpiReport.total_production_time;
-          this.NAT = kpiReport.net_available_time;// (data.Table[0].NAT / 3600).toFixed(2)
-          this.PDT = kpiReport.planned_downtime;
+          this.SPT = kpiReport.total_production_time.toFixed(2);
+          this.NAT = kpiReport.net_available_time.toFixed(2);// (data.Table[0].NAT / 3600).toFixed(2)
+          this.PDT = kpiReport.planned_downtime.toFixed(2);
           this.Qty = kpiReport.total_qty_produced;
           this.SQty = kpiReport.scrap_qty;
 
@@ -115,8 +124,37 @@ export class OEEReportComponent implements OnInit {
           this.To = kpiReport.enddt;
 
           // 处理和填充数据数组
-          this.AVAData = availabilityLossDetails;
+          type DataObject = {
+            machine_id: string;
+            loss_type: string;
+            reason: string;
+            reason_code_c: string;
+            chinese_code: string;
+            start_time: string;
+            end_time: string;
+            duration_minutes: number;
+            percentage: number;
+          };
+          const reasonMap = new Map<string, DataObject>();
+          availabilityLossDetails.forEach(item => {
+            if (reasonMap.has(item.reason)) {
+              const existingItem = reasonMap.get(item.reason)!;
+              existingItem.duration_minutes += item.duration_minutes;
+            } else {
+              // 克隆对象，保持其他属性不变，修改duration_minutes
+              const newItem = { ...item, duration_minutes: item.duration_minutes };
+              reasonMap.set(item.reason, newItem);
+            }
+          });
+          const totalDuration = Array.from(reasonMap.values()).reduce((acc, item) => acc + item.duration_minutes, 0);
+          const resultavailabilityLossDetails: DataObject[] = Array.from(reasonMap.values()).map(item => ({
+            ...item,
+            duration_minutes: parseFloat(item.duration_minutes.toFixed(2)),
+            percentage: totalDuration > 0 ? parseFloat(((item.duration_minutes / totalDuration) * 100).toFixed(2)) : 0
+          }));
+          this.AVAData = resultavailabilityLossDetails;
           this.QTYData = shiftDetails;
+          console.log(jobDetails)
           this.jobData = jobDetails;
           this.shiftData = shiftDetails;
 

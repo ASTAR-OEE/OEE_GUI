@@ -44,42 +44,42 @@ export const config = [
     link: './oee-summary',
     elevation: [] // Specify user roles allowed to see this link: NOT YET IMPLEMENTED
   },
-  {
-    group: 'OEE Trending',
-    icon: 'crosstab',
-    link: './oee-trending',
-    elevation: [] // Specify user roles allowed to see this link: NOT YET IMPLEMENTED
-  },
-  {
-    group: 'Availability Comparison',
-    icon: 'crosstab',
-    link: '',
-    elevation: [] // Specify user roles allowed to see this link: NOT YET IMPLEMENTED
-  },
-  {
-    group: 'Machine Events',
-    icon: 'crosstab',
-    link: '',
-    elevation: [] // Specify user roles allowed to see this link: NOT YET IMPLEMENTED
-  },
-  {
-    group: 'Job Entry',
-    icon: 'crosstab',
-    link: '',
-    elevation: [] // Specify user roles allowed to see this link: NOT YET IMPLEMENTED
-  },
-  {
-    group: 'Job Summary',
-    icon: 'crosstab',
-    link: '',
-    elevation: [] // Specify user roles allowed to see this link: NOT YET IMPLEMENTED
-  },
-  {
-    group: 'Defect Reason Configuration',
-    icon: 'crosstab',
-    link: '',
-    elevation: [] // Specify user roles allowed to see this link: NOT YET IMPLEMENTED
-  },
+  // {
+  //   group: 'OEE Trending',
+  //   icon: 'crosstab',
+  //   link: './oee-trending',
+  //   elevation: [] // Specify user roles allowed to see this link: NOT YET IMPLEMENTED
+  // },
+  // {
+  //   group: 'Availability Comparison',
+  //   icon: 'crosstab',
+  //   link: '',
+  //   elevation: [] // Specify user roles allowed to see this link: NOT YET IMPLEMENTED
+  // },
+  // {
+  //   group: 'Machine Events',
+  //   icon: 'crosstab',
+  //   link: '',
+  //   elevation: [] // Specify user roles allowed to see this link: NOT YET IMPLEMENTED
+  // },
+  // {
+  //   group: 'Job Entry',
+  //   icon: 'crosstab',
+  //   link: '',
+  //   elevation: [] // Specify user roles allowed to see this link: NOT YET IMPLEMENTED
+  // },
+  // {
+  //   group: 'Job Summary',
+  //   icon: 'crosstab',
+  //   link: '',
+  //   elevation: [] // Specify user roles allowed to see this link: NOT YET IMPLEMENTED
+  // },
+  // {
+  //   group: 'Defect Reason Configuration',
+  //   icon: 'crosstab',
+  //   link: '',
+  //   elevation: [] // Specify user roles allowed to see this link: NOT YET IMPLEMENTED
+  // },
   // {
   //   group: 'Resource',
   //   icon: 'crosstab',

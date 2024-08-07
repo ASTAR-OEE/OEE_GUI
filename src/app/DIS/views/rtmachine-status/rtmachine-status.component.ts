@@ -83,6 +83,9 @@ export class RTMachineStatusComponent implements OnInit, OnDestroy {
     this.socket.onmessage = (event) => {
       const data = JSON.parse(event.data);
       console.log("Message from server: ", data);
+      data.Machine.forEach(item => {
+        item.duration = Math.abs(item.duration);
+      })
       this.bigData = data.Machine;
     };
 

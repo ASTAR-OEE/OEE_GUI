@@ -50,7 +50,35 @@ export class AvaReportComponent {
           this.From =  data.kpi_report.startdt;
           this.To =  data.kpi_report.enddt;
           
-          this.AVAData = data.availability_loss_details;
+          type DataObject = {
+            machine_id: string;
+            loss_type: string;
+            reason: string;
+            reason_code_c: string;
+            chinese_code: string;
+            start_time: string;
+            end_time: string;
+            duration_minutes: number;
+            percentage: number;
+          };
+          const reasonMap = new Map<string, DataObject>();
+          data.availability_loss_details.forEach(item => {
+            if (reasonMap.has(item.reason)) {
+              const existingItem = reasonMap.get(item.reason)!;
+              existingItem.duration_minutes += item.duration_minutes;
+            } else {
+              // 克隆对象，保持其他属性不变，修改duration_minutes
+              const newItem = { ...item, duration_minutes: item.duration_minutes };
+              reasonMap.set(item.reason, newItem);
+            }
+          });
+          const totalDuration = Array.from(reasonMap.values()).reduce((acc, item) => acc + item.duration_minutes, 0);
+          const resultavailabilityLossDetails: DataObject[] = Array.from(reasonMap.values()).map(item => ({
+            ...item,
+            duration_minutes: parseFloat(item.duration_minutes.toFixed(2)),
+            percentage: totalDuration > 0 ? parseFloat(((item.duration_minutes / totalDuration) * 100).toFixed(2)) : 0
+          }));
+          this.AVAData = resultavailabilityLossDetails;
 
            // Process Table3 data
            //const AVAarray= this.buildArrayFromTable(this.AVAData, 'reason', 'duration_minutes');
